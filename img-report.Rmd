@@ -1,0 +1,88 @@
+---
+title: |
+  | Wadi Al Sulai
+  | Construction Management
+  | List Report
+author:
+- Amanah Riyadh
+- Boedeker Landscape Architects
+header-includes:
+- \usepackage{graphicx}
+- \usepackage{fancyhdr}
+- \pagestyle{fancy}
+- \setlength\headheight{28pt}
+- \fancyhead[L,CE]{\includegraphics[width=1cm]{WS-logo.png} Wadi Al Sulai Construction Management}
+- \fancyhead[R,CE]{\includegraphics[width=2cm]{bpla-logo-220.png}}
+- \fancyfoot[L,CE]{`r format(Sys.time(), '%d %B %Y')`}
+- \fancyfoot[R,CE]{Boedeker Landscape Architects}
+output:
+  pdf_document:
+    #fig_height: 1
+    #fig_width: 1
+    #keep_tex: yes
+    #highlight: tango
+    latex_engine: xelatex
+    number_sections: yes
+    # toc: yes
+#mainfont: Arial
+classoption: report
+---
+
+```{r 'setup', collapse=F, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE,
+                      message = FALSE,
+                      results = 'asis')
+```
+
+# Construction activities
+
+In the period of `r format(min(as.Date(apidata()$Created)), '%d.%m.%Y')` to `r format(max(as.Date(apidata()$Created)), '%d.%m.%Y')` site supervision activities have been documented.  `r nrow(apidata())` activities were recorded with the following status.
+
+```{r 'abstract', echo=FALSE, message=TRUE, warning=TRUE, results='asis'}
+statusTable <- t(table(datain()$Status))
+# #colnames(status.table)[1]
+knitr::kable(statusTable, format="markdown", row.names = F, align = 'c')
+```
+
+
+# Selected activities
+This report shows `r nrow(datain())` recordings out of the total number of records based on the following selection: 
+
+* Responsible: `r input$responsible`
+* Date: `r format(input$dateRange[1], '%d.%m.%Y')` to `r format(input$dateRange[2], '%d.%m.%Y')`
+* Item:  `r input$issue` 
+* Status: `r input$status`
+
+\newpage
+## Report of selected activities
+```{r 'img table', results='asis', echo=FALSE}
+#make image captions
+imageta<-datain()[,c("ID","KM","Status","Issue","photos_url")]
+imageta$capt<-paste0(imageta$Status,": ",imageta$ID)
+imageta$capt1<-paste0(imageta$KM,"KM: ",imageta$Issue)
+imageta$capt2<-""
+#make table
+if (nrow(imageta) %%3 !=0){
+    b = t(c(imageta[,c("photos_url")],rep(x="",times=(3-nrow(imageta) %%3))))
+    c = t(c(imageta[,c("capt")],rep(x="",times=(3-nrow(imageta) %%3))))
+    c1 = t(c(imageta[,c("capt1")],rep(x="",times=(3-nrow(imageta) %%3))))
+    c2 = t(c(imageta[,c("capt2")],rep(x="",times=(3-nrow(imageta) %%3))))
+}else{
+    b = t(imageta[,c("photos_url")])
+    c = t(imageta[,c("capt")])
+    c1 = t(imageta[,c("capt1")])
+    c2 = t(imageta[,c("capt2")])
+}
+
+# b<-c(b,rep("",3))
+# c<-c(c,rep("",3))
+# c1<-c(c1,rep("",3))
+# c2<-c(c2,rep("",3))
+
+d=rbind(b,c,c1,c2)
+e=matrix(d,ncol = 3,byrow=F)
+colnames(e)<-c("","","")
+#e<-t(e)
+knitr::kable(e, format = "markdown", caption = '',longtable=T, row.names = F)
+#padding=c(10,10,0), align='c'
+```

@@ -1,0 +1,94 @@
+---
+title: |
+  | Wadi Al Sulai
+  | Construction Management
+  | List Report
+author:
+- Amanah Riyadh
+- Boedeker Landscape Architects
+header-includes:
+#font mess
+- \usepackage{fontspec}
+- \setmainfont{Calibri.sty}
+#- \defaultfontfeatures{Mapping=tex-text}
+# - \usepackage{xunicode}
+# - \usepackage{xltxtra}
+# - \setmainfont{Calibri}
+# # - \usepackage[scaled]{helvet}
+# # - \renewcommand*\familydefault{\sfdefault}
+# - \RequirePackage{fontenc}
+# - \usepackage[T1]{fontenc}
+# - \usepackage{fontenc}
+# - \usepackage[utf8]{inputenc}
+# - \RequirePackage{sysfonts}
+# #- \usepackage{sysfonts}
+# - \setmainfont{\fontspec{Calibri.}}
+#- \usepackage{Verdana}
+# - \setmainfont{texgyrepagella-regular.otf}[ BoldFont = texgyrepagella-bold.otf , ItalicFont = texgyrepagella-italic.otf , BoldItalicFont = texgyrepagella-bolditalic.otf ]
+# - \RequirePackage{Verdana}
+# - \setmainfont{\fontspec{Calibri}}
+# - \setsansfont{Trebuchet MS} 
+# - \setmonofont{Inconsolata}
+#- \setmainfont{Verdana}
+#- \usepackage[T1]{fontenc}
+#- \usepackage[utf8]{inputenc}
+#- \setmainfont{Arial}
+- \usepackage{graphicx}
+- \usepackage{fancyhdr}
+- \pagestyle{fancy}
+- \setlength\headheight{28pt}
+- \fancyhead[L,CE]{\includegraphics[width=1cm]{WS-logo.png} Wadi Al Sulai Construction Management}
+- \fancyhead[R,CE]{\includegraphics[width=2cm]{bpla-logo-220.png}}
+- \fancyfoot[L,CE]{`r format(Sys.time(), '%d %B %Y')`}
+- \fancyfoot[R,CE]{Boedeker Landscape Architects}
+output:
+  pdf_document:
+    latex_engine: xelatex
+    number_sections: yes
+    keep_tex: yes
+classoption: report
+papersize: A4
+geometry:
+    margin=0.5in
+#fontfamily: Arial
+#mainfont: Arial
+---
+
+
+```{r 'setup', collapse=F, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE,
+                      message = FALSE,
+                      results = 'asis')
+#options(width = 8)
+```
+
+# Construction activities
+
+In the period of `r format(min(as.Date(apidata()$Created)), '%d.%m.%Y')` to `r format(max(as.Date(apidata()$Created)), '%d.%m.%Y')` site supervision activities have been documented.  `r nrow(apidata())` activities were recorded with the following status.
+
+```{r 'abstract', echo=FALSE, message=TRUE, warning=TRUE, results='asis'}
+statusTable <- t(table(datain()$Status))
+# #colnames(status.table)[1]
+knitr::kable(statusTable, format="markdown", row.names = F, align = 'c')
+```
+
+
+# Selected activities
+
+This report shows `r nrow(datain())` recordings out of the total number of records based on the following selection: 
+
+* Responsible: `r input$responsible`
+* Date: `r format(input$dateRange[1], '%d.%m.%Y')` to `r format(input$dateRange[2], '%d.%m.%Y')`
+* Issue:  `r input$issue` 
+* Status: `r input$status`
+
+
+\newpage
+## Report of selected activities
+<!-- The table below shows the `r input$actionrequired` in the period from `r input$dateRange[1]`ot `r input$dateRange[2]` with the species  `r input$species` and the status `r input$status`. -->
+```{r 'table1', results='asis', echo=FALSE,fig.width = 12}
+tabledata<-datain()[,c("ID","KM","Status","Issue","Action","Comments","Created")]
+tabledata$Created<-format(as.Date(tabledata$Created), "%d.%m.%Y")
+knitr::kable(tabledata, format = "markdown",longtable = TRUE, row.names = F,booktabs =T, padding = c(10,10,60,20,0,60,40))
+#padding for Arial padding = c(10,10,40,10,0,10,10)
+```
