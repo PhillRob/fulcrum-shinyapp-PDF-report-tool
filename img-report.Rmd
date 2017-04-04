@@ -1,34 +1,39 @@
 ---
 title: |
-  | Wadi Al Sulai
-  | Construction Management
-  | List Report
+    | Wadi Al Sulai
+    | Construction Management
+    | List Report
 author:
-- Amanah Riyadh
-- Boedeker Landscape Architects
+    - Amanah Riyadh
+    - Boedeker Landscape Architects
+date: "Report generated: `r format(Sys.time(), '%d %B %Y at %H:%M:%S')`"
 header-includes:
-- \usepackage{graphicx}
-- \usepackage{fancyhdr}
-- \pagestyle{fancy}
-- \setlength\headheight{28pt}
-- \fancyhead[L,CE]{\includegraphics[width=1cm]{WS-logo.png} Wadi Al Sulai Construction Management}
-- \fancyhead[R,CE]{\includegraphics[width=2cm]{bpla-logo-220.png}}
-- \fancyfoot[L,CE]{`r format(Sys.time(), '%d %B %Y')`}
-- \fancyfoot[R,CE]{Boedeker Landscape Architects}
+#font mess
+    - \usepackage[scaled]{helvet}
+    - \renewcommand*\familydefault{\sfdefault}
+    - \usepackage[T1]{fontenc}
+    - \usepackage{graphicx}
+    - \usepackage{fancyhdr}
+    - \pagestyle{fancy}
+    - \setlength\headheight{28pt}
+    - \fancyhead[L,CE]{\includegraphics[width=1cm]{WS-logo.png}} 
+    - \fancyhead[C]{\centering {Wadi Al Sulai Construction Management}}
+    - \fancyhead[R,CE]{\includegraphics[width=2cm]{bpla-logo-220.png}}
+    - \fancyfoot[L,CE]{`r format(Sys.time(), '%d %B %Y')`}
+    - \fancyfoot[R,CE]{Boedeker Landscape Architects}
 output:
   pdf_document:
-    #fig_height: 1
-    #fig_width: 1
-    #keep_tex: yes
-    #highlight: tango
     latex_engine: xelatex
     number_sections: yes
-    # toc: yes
-#mainfont: Arial
-classoption: report
+    #keep_tex: yes
+classoption: article
+papersize: A4
+fontsize: 11pt
+geometry: margin=0.8in
+linestretch: 1.15
 ---
-
-```{r 'setup', collapse=F, include=FALSE}
+    
+    ```{r 'setup', collapse=F, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE,
                       message = FALSE,
                       results = 'asis')
@@ -47,7 +52,7 @@ knitr::kable(statusTable, format="markdown", row.names = F, align = 'c')
 
 # Selected activities
 This report shows `r nrow(datain())` recordings out of the total number of records based on the following selection: 
-
+    
 * Responsible: `r input$responsible`
 * Date: `r format(input$dateRange[1], '%d.%m.%Y')` to `r format(input$dateRange[2], '%d.%m.%Y')`
 * Item:  `r input$issue` 
@@ -58,7 +63,7 @@ This report shows `r nrow(datain())` recordings out of the total number of recor
 ```{r 'img table', results='asis', echo=FALSE}
 #make image captions
 imageta<-datain()[,c("ID","KM","Status","Issue","photos_url")]
-imageta$capt<-paste0(imageta$Status,": ",imageta$ID)
+imageta$capt<-paste0(trimws(imageta$Status),": ",imageta$ID)
 imageta$capt1<-paste0(imageta$KM,"KM: ",imageta$Issue)
 imageta$capt2<-""
 #make table
@@ -73,11 +78,6 @@ if (nrow(imageta) %%3 !=0){
     c1 = t(imageta[,c("capt1")])
     c2 = t(imageta[,c("capt2")])
 }
-
-# b<-c(b,rep("",3))
-# c<-c(c,rep("",3))
-# c1<-c(c1,rep("",3))
-# c2<-c(c2,rep("",3))
 
 d=rbind(b,c,c1,c2)
 e=matrix(d,ncol = 3,byrow=F)

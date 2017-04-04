@@ -6,38 +6,18 @@ title: |
 author:
 - Amanah Riyadh
 - Boedeker Landscape Architects
+date: "Report generated: `r format(Sys.time(), '%d %B %Y at %H:%M:%S')`"
 header-includes:
 #font mess
-- \usepackage{fontspec}
-- \setmainfont{Calibri.sty}
-#- \defaultfontfeatures{Mapping=tex-text}
-# - \usepackage{xunicode}
-# - \usepackage{xltxtra}
-# - \setmainfont{Calibri}
-# # - \usepackage[scaled]{helvet}
-# # - \renewcommand*\familydefault{\sfdefault}
-# - \RequirePackage{fontenc}
-# - \usepackage[T1]{fontenc}
-# - \usepackage{fontenc}
-# - \usepackage[utf8]{inputenc}
-# - \RequirePackage{sysfonts}
-# #- \usepackage{sysfonts}
-# - \setmainfont{\fontspec{Calibri.}}
-#- \usepackage{Verdana}
-# - \setmainfont{texgyrepagella-regular.otf}[ BoldFont = texgyrepagella-bold.otf , ItalicFont = texgyrepagella-italic.otf , BoldItalicFont = texgyrepagella-bolditalic.otf ]
-# - \RequirePackage{Verdana}
-# - \setmainfont{\fontspec{Calibri}}
-# - \setsansfont{Trebuchet MS} 
-# - \setmonofont{Inconsolata}
-#- \setmainfont{Verdana}
-#- \usepackage[T1]{fontenc}
-#- \usepackage[utf8]{inputenc}
-#- \setmainfont{Arial}
+- \usepackage[scaled]{helvet}
+- \renewcommand*\familydefault{\sfdefault}
+- \usepackage[T1]{fontenc}
 - \usepackage{graphicx}
 - \usepackage{fancyhdr}
 - \pagestyle{fancy}
 - \setlength\headheight{28pt}
-- \fancyhead[L,CE]{\includegraphics[width=1cm]{WS-logo.png} Wadi Al Sulai Construction Management}
+- \fancyhead[L,CE]{\includegraphics[width=1cm]{WS-logo.png}} 
+- \fancyhead[C]{\centering {Wadi Al Sulai Construction Management}}
 - \fancyhead[R,CE]{\includegraphics[width=2cm]{bpla-logo-220.png}}
 - \fancyfoot[L,CE]{`r format(Sys.time(), '%d %B %Y')`}
 - \fancyfoot[R,CE]{Boedeker Landscape Architects}
@@ -45,13 +25,14 @@ output:
   pdf_document:
     latex_engine: xelatex
     number_sections: yes
-    keep_tex: yes
-classoption: report
+    #keep_tex: yes
+classoption: article
 papersize: A4
-geometry:
-    margin=0.5in
-#fontfamily: Arial
-#mainfont: Arial
+fontsize: 11pt
+geometry: margin=0.8in
+linestretch: 1.15
+# geometry:
+#     margin: 0.5in
 ---
 
 
@@ -90,5 +71,5 @@ This report shows `r nrow(datain())` recordings out of the total number of recor
 tabledata<-datain()[,c("ID","KM","Status","Issue","Action","Comments","Created")]
 tabledata$Created<-format(as.Date(tabledata$Created), "%d.%m.%Y")
 knitr::kable(tabledata, format = "markdown",longtable = TRUE, row.names = F,booktabs =T, padding = c(10,10,60,20,0,60,40))
-#padding for Arial padding = c(10,10,40,10,0,10,10)
+#padding for Arial padding = c(10,10,40,10,10,10,10)
 ```

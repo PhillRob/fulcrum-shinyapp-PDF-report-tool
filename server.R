@@ -5,8 +5,8 @@ function(input, output, session) {
     # Get Data
     updatefreqencyinsec = 600000
     apidata <- reactivePoll(updatefreqencyinsec, session,
-                              checkFunc = function() {max(loadData()$Updated)},
-                              valueFunc = function() {loadData()}
+                            checkFunc = function() {max(loadData()$Updated)},
+                            valueFunc = function() {loadData()}
     )
     time.now <- reactivePoll(updatefreqencyinsec, session,
                              checkFunc = function() {max(loadData()$Updated)},
